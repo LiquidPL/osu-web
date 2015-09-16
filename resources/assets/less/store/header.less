@@ -17,24 +17,59 @@
 *    along with osu!web.  If not, see <http://www.gnu.org/licenses/>.
 *
 */
-#store-header {
+.store-header {
   padding: 0px;
   height: 200px;
   .at2x("/images/headers/store.png", 900px, 200px);
 
-  > div {
-    position: absolute;
-    height: 100%;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  &__logo {
+    &--late {
+      .at2x("/images/headers/store-late.png", 900px, 200px);
+      background-position: 50% 50%;
+      width: 500px;
+      height: 200px;
+    }
+
+    &--svg {
+      width: 190px;
+      height: 125px;
+
+      background-image: url("/images/layout/store-logo-bg.svg");
+      background-repeat: no-repeat;
+
+      &:hover {
+        .sh0 { fill: #fff; }
+        .sh1 { fill: #FF66AA; }
+      }
+
+      .sh0 {
+        fill: #FF66AA;
+        transition: fill 0.3s ease-in-out;
+      }
+
+      .sh1 {
+        fill: #FFFFFF;
+        transition: fill 0.3s ease-in-out;
+      }
+      .correct {
+        transform: translate(128px,128px);
+      }
+
+      path {
+        transform: translate(-128px,-128px);
+        transform-origin: 0 0;
+      }
+    }
   }
 
-  .float {
+  &__float {
     position: absolute;
     top: 0px;
+    left: 0px;
     height: 100%;
 
     display: flex;
@@ -44,12 +79,14 @@
     @media @desktop {
       align-items: center;
     }
+
+    &--right {
+      left: auto;
+      right: 0px;
+    }
   }
 
-  .float-left { left: 0px; }
-  .float-right { right: 0px; }
-
-  .float-link {
+  &__float-link {
     padding: @grid-gutter-width/4;
     &:extend(.default-box-shadow);
     border-radius: 5px;
@@ -58,20 +95,27 @@
     display: flex;
     align-items: center;
 
+    font-size: 12px;
     .pink-link;
 
-    > * {
-      margin-right: @grid-gutter-width/8;
+    &:visited,
+    &:hover,
+    &:active,
+    &:focus {
+      text-decoration: none;
+    }
+  }
 
-      &:last-child {
-        margin-right: 0px;
-      }
+  &__float-icon {
+    font-size: 18px;
+    margin-top: 4px;
+
+    &--left {
+      margin-right: @grid-gutter-width/8;
     }
 
-    span { font-size: 12px; }
-    i {
-      font-size: 18px;
-      margin-top: 4px;
+    &--right {
+      margin-left: @grid-gutter-width/8;
     }
   }
 }
