@@ -39,7 +39,7 @@
     @endforeach
 
     <div class="store-index__item" style="background-image: url(//puu.sh/8Bj8T/d6009fc9ee.png)">
-        <div class="store-index__item-description">
+        <div class="store-index__item-description store-index__item-description--more">
             <h1>More to come!</h1>
             <p class="always-visible">We're just getting started... <strong>check back soon!</strong></p>
         </div>
