@@ -27,7 +27,7 @@
                 class="store-index__item {{ $p->promoted ? "store-index__item--wide" : "" }}"
                 style="background-image: url('{{ $p->promoted ? $p->header_image : $p->image }}')">
             <a class="store-index__item-content" href="/store/product/{{{$p->product_id}}}">
-                <div class="store-index__item-description {{ $p->promoted ? "store-index__item-description--wide" : "" }}">
+                <div class="store-index__item-description store-item-header {{ $p->promoted ? "store-item-header--wide" : "" }}">
                     {!! Markdown::convertToHtml($p->header_description) !!}
                 </div>
 
@@ -39,9 +39,9 @@
     @endforeach
 
     <div class="store-index__item" style="background-image: url(//puu.sh/8Bj8T/d6009fc9ee.png)">
-        <div class="store-index__item-description store-index__item-description--more">
+        <div class="store-index__item-description store-item-header store-item-header--more">
             <h1>More to come!</h1>
-            <p class="always-visible">We're just getting started... <strong>check back soon!</strong></p>
+            <p>We're just getting started... <strong>check back soon!</strong></p>
         </div>
     </div>
 </div>
