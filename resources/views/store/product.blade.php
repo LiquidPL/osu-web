@@ -22,8 +22,8 @@
     @include("store.header")
 
     {!! Form::open(["url" => "store/add-to-cart", "data-remote" => true, "id" => "product-form", "class" => "row-page row-group"]) !!}
-        <div class="row-subgroup row-subgroup--large" id="product-header" style="background-image: url({{ $product->header_image }})">
-            <div>{!! Markdown::convertToHtml($product->header_description) !!}</div>
+        <div class="row-subgroup row-subgroup--large content-header" style="background-image: url('{{ $product->header_image }}')">
+            <div class="store-item-header store-item-header--wide">{!! Markdown::convertToHtml($product->header_description) !!}</div>
         </div>
 
         <div class="row-subgroup">
