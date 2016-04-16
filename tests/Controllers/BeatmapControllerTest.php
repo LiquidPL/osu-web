@@ -53,14 +53,17 @@ class BeatmapControllerTest extends TestCase
                 'type' => 'country'
             ])->seeStatusCode (422)
             ->seeJson(['error' => trans('errors.supporter_only')]);
-        // 
-        // $user = factory (User::class)->make();
-        // $user->osu_subscriber = true;
-        // $user->save();
-        //
-        // $this->actingAs($user)
-        //     ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-        //         'type' => 'country'
-        //     ])->seeStatusCode (200);
+    }
+
+    public function testNonGeneralScoreboardNonSupporter()
+    {
+        $user = factory (User::class)->make();
+        $user->osu_subscriber = true;
+        $user->save();
+
+        $this->actingAs($user)
+        ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+            'type' => 'country'
+            ])->seeStatusCode (200);
     }
 }
