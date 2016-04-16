@@ -62,4 +62,4 @@ class BeatmapControllerTest extends TestCase
 //                 'type' => 'country'
 //             ])->seeStatusCode (200);
 //     }
-// }
+}
