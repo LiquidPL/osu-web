@@ -19,47 +19,50 @@
 
 use App\Models\User;
 use App\Models\Beatmap;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class BeatmapControllerTest extends TestCase
 {
-    // public function setUp()
-    // {
-    //     parent::setUp();
-    //
-    //     $this->user = factory (User::class)->create();
-    //     $this->beatmap = factory (Beatmap::class)->create();
-    // }
-    //
-    // /**
-    //  * Checks whether HTTP 403 is thrown when a logged out
-    //  * user tries to access the non-general (country or friend ranking)
-    //  * scoreboards.
-    //  */
-    // public function testNonGeneralScoreboardLoggedOut()
-    // {
-    //     $this->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-    //         'type' => 'country'
-    //     ])->seeStatusCode (403);
-    // }
-    //
-    // /**
-    //  * Checks whether an error is thrown when an user without supporter
-    //  * tries to access supporter-only scoreboards.
-    //  */
-    // public function testNonGeneralScoreboardSupporter()
-    // {
-    //     $this->actingAs($this->user)
-    //         ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-    //             'type' => 'country'
-    //         ])->seeStatusCode (422)
-    //         ->seeJson(['error' => trans('errors.supporter_only')]);
-    //
-    //     $this->user->osu_subscriber = true;
-    //     $this->user->save();
-    //
-    //     $this->actingAs($this->user)
-    //         ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-    //             'type' => 'country'
-    //         ])->seeStatusCode (200);
-    // }
+    use DatabaseTransactions;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->user = factory (User::class)->create();
+        $this->beatmap = factory (Beatmap::class)->create();
+    }
+
+    /**
+     * Checks whether HTTP 403 is thrown when a logged out
+     * user tries to access the non-general (country or friend ranking)
+     * scoreboards.
+     */
+    public function testNonGeneralScoreboardLoggedOut()
+    {
+        $this->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+            'type' => 'country'
+        ])->seeStatusCode (403);
+    }
+
+    /**
+     * Checks whether an error is thrown when an user without supporter
+     * tries to access supporter-only scoreboards.
+     */
+    public function testNonGeneralScoreboardSupporter()
+    {
+        $this->actingAs($this->user)
+            ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+                'type' => 'country'
+            ])->seeStatusCode (422)
+            ->seeJson(['error' => trans('errors.supporter_only')]);
+
+        $this->user->osu_subscriber = true;
+        $this->user->save();
+
+        $this->actingAs($this->user)
+            ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+                'type' => 'country'
+            ])->seeStatusCode (200);
+    }
 }
