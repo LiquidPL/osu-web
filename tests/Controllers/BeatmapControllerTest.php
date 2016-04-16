@@ -19,12 +19,9 @@
 
 use App\Models\User;
 use App\Models\Beatmap;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class BeatmapControllerTest extends TestCase
 {
-    use DatabaseTransactions;
-
     public function setUp()
     {
         parent::setUp();
@@ -33,17 +30,17 @@ class BeatmapControllerTest extends TestCase
         $this->beatmap = factory (Beatmap::class)->create();
     }
 
-    /**
-     * Checks whether HTTP 403 is thrown when a logged out
-     * user tries to access the non-general (country or friend ranking)
-     * scoreboards.
-     */
-    public function testNonGeneralScoreboardLoggedOut()
-    {
-        $this->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-            'type' => 'country'
-        ])->seeStatusCode (403);
-    }
+    // /**
+    //  * Checks whether HTTP 403 is thrown when a logged out
+    //  * user tries to access the non-general (country or friend ranking)
+    //  * scoreboards.
+    //  */
+    // public function testNonGeneralScoreboardLoggedOut()
+    // {
+    //     $this->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+    //         'type' => 'country'
+    //     ])->seeStatusCode (403);
+    // }
 
     /**
      * Checks whether an error is thrown when an user without supporter
