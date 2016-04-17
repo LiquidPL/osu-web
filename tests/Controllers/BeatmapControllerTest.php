@@ -43,30 +43,20 @@ class BeatmapControllerTest extends TestCase
         $this->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
             'type' => 'country'
         ])->seeStatusCode (403);
+
+        $this->actingAs($this->user)
+            ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+                'type' => 'country'
+            ])->seeStatusCode (422)
+            ->seeJson(['error' => trans('errors.supporter_only')]);
+
+        $user = factory (User::class)->make();
+        $user->osu_subscriber = true;
+        $user->save();
+
+        $this->actingAs($user)
+            ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+                'type' => 'country'
+                ])->seeStatusCode (200);
     }
-
-    // /**
-    //  * Checks whether an error is thrown when an user without supporter
-    //  * tries to access supporter-only scoreboards.
-    //  */
-    // public function testNonGeneralScoreboardSupporter()
-    // {
-    //     $this->actingAs($this->user)
-    //         ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-    //             'type' => 'country'
-    //         ])->seeStatusCode (422)
-    //         ->seeJson(['error' => trans('errors.supporter_only')]);
-    // }
-
-    // public function testNonGeneralScoreboardNonSupporter()
-    // {
-    //     $user = factory (User::class)->make();
-    //     $user->osu_subscriber = true;
-    //     $user->save();
-    //
-    //     $this->actingAs($user)
-    //     ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-    //         'type' => 'country'
-    //         ])->seeStatusCode (200);
-    // }
 }
