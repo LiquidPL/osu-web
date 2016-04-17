@@ -19,9 +19,12 @@
 
 use App\Models\User;
 use App\Models\Beatmap;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class BeatmapControllerTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function setUp()
     {
         parent::setUp();
