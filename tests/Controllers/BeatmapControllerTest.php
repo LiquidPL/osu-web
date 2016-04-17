@@ -19,17 +19,19 @@
 
 use App\Models\User;
 use App\Models\Beatmap;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class BeatmapControllerTest extends TestCase
 {
-    use DatabaseTransactions;
-
     public function setUp()
     {
         parent::setUp();
 
         $this->user = factory (User::class)->create();
+
+        $this->sub_user = factory(User::class)->create();
+        $this->sub_user->osu_subscriber = true;
+        $this->sub_user->save();
+
         $this->beatmap = factory (Beatmap::class)->create();
     }
 
@@ -43,20 +45,26 @@ class BeatmapControllerTest extends TestCase
         $this->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
             'type' => 'country'
         ])->seeStatusCode (403);
+    }
 
+    /**
+     * Checks whether an error is thrown when an user without supporter
+     * tries to access supporter-only scoreboards.
+     */
+    public function testNonGeneralScoreboardNonSupporter()
+    {
         $this->actingAs($this->user)
-            ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+            ->json ('GET', route ('beatmap.scores', $this->beatmap->beatmap_id), [
                 'type' => 'country'
             ])->seeStatusCode (422)
             ->seeJson(['error' => trans('errors.supporter_only')]);
+    }
 
-        $user = factory (User::class)->make();
-        $user->osu_subscriber = true;
-        $user->save();
-
-        $this->actingAs($user)
-            ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+    public function testNonGeneralScoreboardSupporter()
+    {
+        $this->actingAs($this->sub_user)
+            ->json ('GET', route ('beatmap.scores', $this->beatmap->beatmap_id), [
                 'type' => 'country'
-                ])->seeStatusCode (200);
+            ])->seeStatusCode (200);
     }
 }
