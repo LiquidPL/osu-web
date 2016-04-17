@@ -45,18 +45,18 @@ class BeatmapControllerTest extends TestCase
         ])->seeStatusCode (403);
     }
 
-    /**
-     * Checks whether an error is thrown when an user without supporter
-     * tries to access supporter-only scoreboards.
-     */
-    public function testNonGeneralScoreboardSupporter()
-    {
-        $this->actingAs($this->user)
-            ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
-                'type' => 'country'
-            ])->seeStatusCode (422)
-            ->seeJson(['error' => trans('errors.supporter_only')]);
-    }
+    // /**
+    //  * Checks whether an error is thrown when an user without supporter
+    //  * tries to access supporter-only scoreboards.
+    //  */
+    // public function testNonGeneralScoreboardSupporter()
+    // {
+    //     $this->actingAs($this->user)
+    //         ->json ('GET', route ('beatmap.scores', ['id' => $this->beatmap->beatmap_id]), [
+    //             'type' => 'country'
+    //         ])->seeStatusCode (422)
+    //         ->seeJson(['error' => trans('errors.supporter_only')]);
+    // }
 
     // public function testNonGeneralScoreboardNonSupporter()
     // {
