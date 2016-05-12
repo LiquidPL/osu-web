@@ -122,17 +122,35 @@ class Beatmap extends Model
         return $this->hasMany(BeatmapFailtimes::class);
     }
 
-    public function scores()
+    public function scores($mode = null)
     {
-        $mode = studly_case($this->modeStr($this->playmode));
+        $mode = $this->getStudlyMode($mode);
 
         return $this->hasMany("App\Models\Score\\{$mode}");
     }
 
-    public function scoresBest()
+    public function scoresBest($mode = null)
     {
-        $mode = studly_case($this->modeStr($this->playmode));
+        $mode = $this->getStudlyMode($mode);
 
         return $this->hasMany("App\Models\Score\Best\\{$mode}");
+    }
+
+    /**
+     * Gets the studly form of the given mode, while checking
+     * whether if that mode is valid for the current beatmap.
+     * @param  $mode The mode.
+     * @return       Studly form of $mode. If $mode === null, then returns
+     *               mode stored in beatmaps parameters.
+     */
+    private function getStudlyMode($mode)
+    {
+        $mode = $mode ?? $this->modeStr($this->playmode);
+
+        if ($this->playmode !== 0 && $mode !== $this->modeStr($this->playmode)) {
+            throw new \InvalidArgumentException('Only standard beatmaps can have different mode scoreboards.');
+        }
+
+        return studly_case($mode);
     }
 }
