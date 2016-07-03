@@ -39,6 +39,7 @@ class Post extends Model
     protected $casts = [
         'post_edit_locked' => 'boolean',
         'post_approved' => 'boolean',
+        'hidden' => 'boolean',
     ];
 
     private $normalizedUsers = [];
