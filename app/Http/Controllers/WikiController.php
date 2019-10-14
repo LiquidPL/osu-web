@@ -20,6 +20,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Libraries\OsuWiki;
 use App\Libraries\WikiRedirect;
 use App\Models\Wiki;
 use Request;
@@ -35,10 +36,7 @@ class WikiController extends Controller
             return ujs_redirect(wiki_url());
         }
 
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-        $imageExtensions = ['gif', 'jpeg', 'jpg', 'png'];
-
-        if (in_array($extension, $imageExtensions, true)) {
+        if (OsuWiki::isImage($path)) {
             return $this->showImage($path);
         }
 

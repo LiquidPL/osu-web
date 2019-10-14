@@ -31,6 +31,8 @@ class OsuWiki
     const REPOSITORY = 'osu-wiki';
     const USER = 'ppy';
 
+    const IMAGE_EXTENSIONS = ['gif', 'jpeg', 'jpg', 'png'];
+
     public $path;
     public $data;
 
@@ -55,6 +57,40 @@ class OsuWiki
             }
 
             throw $e;
+        }
+    }
+
+    public static function isImage($path)
+    {
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+        return in_array($extension, static::IMAGE_EXTENSIONS, true);
+    }
+
+    /**
+     * Parses a github repository path of a wiki file,
+     * and returns informations such as type, wiki path and locale.
+     *
+     * @param string $path
+     * @return array[]
+     */
+    public static function parseGitHubPath($path)
+    {
+        $matches = [];
+
+        preg_match('/^(?:wiki\/)(.*)\/(.*)\.(.{2,})$/', $path, $matches);
+
+        if (static::isImage($path)) {
+            return [
+                'type' => 'image',
+                'path' => $matches[1].'/'.$matches[2].'.'.$matches[3],
+            ];
+        } else {
+            return [
+                'type' => 'page',
+                'locale' => $matches[2],
+                'path' => $matches[1],
+            ];
         }
     }
 
