@@ -166,6 +166,7 @@ class Page
                 'path_clean' => null,
                 'title' => null,
                 'tags' => [],
+                'layout' => null,
             ];
         } else {
             $this->log('index document');
