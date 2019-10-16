@@ -136,6 +136,7 @@ class Page
 
     public static function esSchemaFile()
     {
+        return config_path("schemas/wiki_pages.json");
     }
 
     public static function esType()
