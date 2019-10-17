@@ -95,7 +95,7 @@ class OsuWiki
         }
     }
 
-    public static function getFileTree($path = 'wiki', $skipNonMarkdown = true, $flatten = false)
+    public static function getFileTree($path = 'wiki', $skipNonMarkdown = true)
     {
         $contents = GitHub::repo()
             ->contents()
@@ -124,14 +124,9 @@ class OsuWiki
             if ($value['type'] === 'file') {
                 $files[] = $value;
             } else {
-                $values = static::getFileTree($value['path'], $skipNonMarkdown, $flatten);
+                $values = static::getFileTree($value['path'], $skipNonMarkdown);
 
-                if ($flatten) {
-                    $contents = array_merge($values, $contents);
-                } else {
-                    $value['files'] = $values;
-                    $files[] = $value;
-                }
+                $contents = array_merge($values, $contents);
             }
         }
 
