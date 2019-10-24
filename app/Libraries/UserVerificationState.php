@@ -25,6 +25,7 @@ use App\Exceptions\UserVerificationException;
 use App\Libraries\Session\SessionManager;
 use App\Models\LegacySession;
 use App\Models\User;
+use App\Models\UserClient;
 
 class UserVerificationState
 {
@@ -132,6 +133,10 @@ class UserVerificationState
         }
 
         if ($this->session->get('verified')) {
+            if ($this->isClientVerification() && $this->getClient()->verified === 0) {
+                return false;
+            }
+
             return true;
         }
 
@@ -148,6 +153,11 @@ class UserVerificationState
     {
         return $this->legacySession() !== null
             && $this->legacySession()->verified;
+    }
+
+    public function isClientVerification()
+    {
+        return $this->session->has('client_hash');
     }
 
     public function legacySession()
@@ -178,7 +188,16 @@ class UserVerificationState
             $this->legacySession()->update(['verified' => true]);
         }
 
-        event(UserSessionEvent::newVerified($this->user->getKey(), $this->session->getKey()));
+        if ($this->isClientVerification()) {
+            $client = $this->getClient();
+
+            $client->verified = true;
+            $client->save();
+
+            $this->session->remove('client_hash');
+        }
+
+        event(UserSessionEvent::newVerified($this->user->getKey(), $this->session->getKey(), $this->isClientVerification()));
     }
 
     public function verify($inputKey)
@@ -209,5 +228,17 @@ class UserVerificationState
 
             throw new UserVerificationException('incorrect_key', false);
         }
+    }
+
+    public function getClient()
+    {
+        if (!$this->isClientVerification()) {
+            return null;
+        }
+
+        return UserClient::fromHash(
+            $this->user->user_id,
+            $this->session->get('client_hash')
+        );
     }
 }

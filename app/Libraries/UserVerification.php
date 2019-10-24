@@ -79,6 +79,11 @@ class UserVerification
         return $this->state->isDone();
     }
 
+    public function isClientVerification()
+    {
+        return $this->state->isClientVerification();
+    }
+
     public function issue()
     {
         $user = $this->user;

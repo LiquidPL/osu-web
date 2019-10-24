@@ -39,12 +39,13 @@ class VerifyUser
         if (!$request->is([
             'home/account/reissue-code',
             'home/account/verify',
+            'home/account/verify-client',
             'home/notifications/endpoint',
             'session',
         ]) && $this->requiresVerification($request)) {
             $verification = UserVerification::fromCurrentRequest();
 
-            if (!$verification->isDone()) {
+            if (!$verification->isDone() && !$verification->isClientVerification()) {
                 return $verification->initiate();
             }
         }

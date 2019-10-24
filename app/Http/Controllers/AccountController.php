@@ -227,6 +227,19 @@ class AccountController extends Controller
         return view('accounts.verification_completed');
     }
 
+    public function verifyClient()
+    {
+        if (!request()->has('client_hash')) {
+            abort(403);
+        }
+
+        if (request()->has('client_hash')) {
+            session()->put('client_hash', request('client_hash'));
+        }
+
+        return UserVerification::fromCurrentRequest()->initiate();
+    }
+
     public function reissueCode()
     {
         return UserVerification::fromCurrentRequest()->reissue();
