@@ -80,6 +80,10 @@ class @UserVerification
     @modal?.classList.contains('js-user-verification--active')
 
 
+  verificationType: =>
+    $('.js-user-verification--type').data('verificationType')
+
+
   prepareForRequest: (type) =>
     @request?.abort()
     @setMessage osu.trans("user_verification.box.#{type}"), true
@@ -125,16 +129,20 @@ class @UserVerification
   success: =>
     return unless @isActive()
 
-    @$modal().modal 'hide'
-    @modal.classList.remove('js-user-verification--active')
+    if @verificationType() == 'account'
+      @$modal().modal 'hide'
+      @modal.classList.remove('js-user-verification--active')
 
-    toClick = @clickAfterVerification
-    @clickAfterVerification = null
-    @setMessage()
-    @inputBox[0].value = ''
-    @inputBox[0].dataset.lastKey = ''
+      toClick = @clickAfterVerification
+      @clickAfterVerification = null
+      @setMessage()
+      @inputBox[0].value = ''
+      @inputBox[0].dataset.lastKey = ''
 
-    osu.executeAction toClick
+      osu.executeAction toClick
+    else
+      $('.js-user-verification--hide').slideUp()
+      $('.js-user-verification--client-success').slideDown()
 
 
   show: (target, html) =>

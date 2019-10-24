@@ -15,61 +15,74 @@
     You should have received a copy of the GNU Affero General Public License
     along with osu!web.  If not, see <http://www.gnu.org/licenses/>.
 --}}
-<div class="user-verification">
+<div class="user-verification js-user-verification--type" data-verification-type="{{ $client ? 'client' : 'account' }}">
     <h1 class="user-verification__row user-verification__row--title">
         {{ trans('user_verification.box.title.'.($client ? 'client' : 'account')) }}
     </h1>
 
-    <p class="user-verification__row user-verification__row--info">
-        {!! trans('user_verification.box.sent', ['mail' => '<strong>'.obscure_email($email).'</strong>']) !!}
-    </p>
+    <div class="js-user-verification--hide">
+        <p class="user-verification__row user-verification__row--info">
+            {!! trans('user_verification.box.sent', ['mail' => '<strong>'.obscure_email($email).'</strong>']) !!}
+        </p>
 
-    <div class="user-verification__row user-verification__row--key">
-        <input
-            data-verification-key-length="{{ config('osu.user.verification_key_length_hex') }}"
-            class="user-verification__key js-user-verification--input modal-af"
-        />
+        <div class="user-verification__row user-verification__row--key">
+            <input
+                data-verification-key-length="{{ config('osu.user.verification_key_length_hex') }}"
+                class="user-verification__key js-user-verification--input modal-af"
+            />
 
-        <div class="user-verification__message js-user-verification--message" data-visibility="hidden">
-            <span class="
-                user-verification__message-spinner
-                js-user-verification--message-spinner
-            ">
-                {!! spinner() !!}
-            </span>
+            <div class="user-verification__message js-user-verification--message" data-visibility="hidden">
+                <span class="
+                    user-verification__message-spinner
+                    js-user-verification--message-spinner
+                ">
+                    {!! spinner() !!}
+                </span>
 
-            <span class="js-user-verification--message-text"></span>
+                <span class="js-user-verification--message-text"></span>
+            </div>
         </div>
     </div>
 
-    <p class="user-verification__row user-verification__row--info">
-        {{ trans('user_verification.box.info.check_spam') }}
-    </p>
+    <div class="js-user-verification--client-success" style="display: none;">
+        <h1 class="user-verification__row user-verification__row--success">
+            <span class="fa fa-check"></span>
+        </h1>
+        <p class="user-verification__row user-verification__row--info">
+            {{ trans('user_verification.box.client_verified') }}
+        </p>
+    </div>
 
-    <p class="user-verification__row user-verification__row--info">
-        {!! trans('user_verification.box.info.recover', [
-            'link' => link_to(
-                osu_url('user.recover'),
-                trans('user_verification.box.info.recover_link'),
-                ['class' => 'user-verification__link']
-            ),
-        ]) !!}
-        {!! trans('user_verification.box.info.reissue', [
-            'reissue_link' => link_to_route(
-                'account.reissue-code',
-                trans('user_verification.box.info.reissue_link'),
-                [],
-                ['class' => 'js-user-verification--reissue user-verification__link']
-            ),
-            'logout_link' =>
-                "<button
-                    class='js-logout-link user-verification__link'
-                    type='button'
-                    data-method='delete'
-                    data-remote='1'
-                    data-url='".route('logout')."'
-                >".trans('user_verification.box.info.logout_link')."
-                </button>",
-        ]) !!}
-    </p>
+    <div class="js-user-verification--hide">
+        <p class="user-verification__row user-verification__row--info">
+            {{ trans('user_verification.box.info.check_spam') }}
+        </p>
+
+        <p class="user-verification__row user-verification__row--info">
+            {!! trans('user_verification.box.info.recover', [
+                'link' => link_to(
+                    osu_url('user.recover'),
+                    trans('user_verification.box.info.recover_link'),
+                    ['class' => 'user-verification__link']
+                ),
+            ]) !!}
+            {!! trans('user_verification.box.info.reissue', [
+                'reissue_link' => link_to_route(
+                    'account.reissue-code',
+                    trans('user_verification.box.info.reissue_link'),
+                    [],
+                    ['class' => 'js-user-verification--reissue user-verification__link']
+                ),
+                'logout_link' =>
+                    "<button
+                        class='js-logout-link user-verification__link'
+                        type='button'
+                        data-method='delete'
+                        data-remote='1'
+                        data-url='".route('logout')."'
+                    >".trans('user_verification.box.info.logout_link')."
+                    </button>",
+            ]) !!}
+        </p>
+    </div>
 </div>

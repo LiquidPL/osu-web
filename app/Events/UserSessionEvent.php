@@ -40,9 +40,9 @@ class UserSessionEvent extends NotificationEventBase
         ]);
     }
 
-    public static function newVerified($userId, $key, $client = false)
+    public static function newVerified($userId, $key)
     {
-        return new static($client ? 'client_verified' : 'verified', $userId, compact('key'));
+        return new static('verified', $userId, compact('key'));
     }
 
     /**

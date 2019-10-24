@@ -197,7 +197,7 @@ class UserVerificationState
             $this->session->remove('client_hash');
         }
 
-        event(UserSessionEvent::newVerified($this->user->getKey(), $this->session->getKey(), $this->isClientVerification()));
+        event(UserSessionEvent::newVerified($this->user->getKey(), $this->session->getKey()));
     }
 
     public function verify($inputKey)
