@@ -17,13 +17,13 @@
 --}}
 @extends('master', [
     // Verification doesn't inherit from App\Controller, thus these variables aren't set. Thus we set them here:
-    'currentSection' => 'error',
-    'currentAction' => '401',
+    'currentSection' => $client ? 'user' : 'error',
+    'currentAction' => $client ? 'verify_client' : '401',
 ])
 
 @section('content')
     <div class="osu-layout__row osu-layout__row--page">
-        <h1>{{ trans('users.verify.title') }}</h1>
+        <h1>{{ trans('users.verify.title.'.($client ? 'client' : 'account')) }}</h1>
     </div>
 @endsection
 
@@ -36,5 +36,5 @@
 @endsection
 
 @section('user-verification-box')
-    @include('users._verify_box', compact('email'))
+    @include('users._verify_box', compact('email', 'client'))
 @endsection

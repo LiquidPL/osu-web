@@ -408,7 +408,9 @@ return [
         'saved' => 'Đã tạo người dùng',
     ],
     'verify' => [
-        'title' => 'Xác Thực Tài Khoản',
+        'title' => [
+            'account' => 'Xác Thực Tài Khoản',
+        ],
     ],
 
     'view_mode' => [

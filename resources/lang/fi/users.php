@@ -408,7 +408,9 @@ return [
         'saved' => 'Käyttäjä luotu',
     ],
     'verify' => [
-        'title' => 'Tilin vahvistaminen',
+        'title' => [
+            'account' => 'Tilin vahvistaminen',
+        ],
     ],
 
     'view_mode' => [

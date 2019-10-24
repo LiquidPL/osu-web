@@ -408,7 +408,9 @@ return [
         'saved' => 'Kullanıcı oluşturuldu',
     ],
     'verify' => [
-        'title' => 'Hesap Doğrulama',
+        'title' => [
+            'account' => 'Hesap Doğrulama',
+        ],
     ],
 
     'view_mode' => [

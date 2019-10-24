@@ -409,7 +409,9 @@ href="mailto:accounts@ppy.sh">contatta il supporto</a>.',
         'saved' => 'Utente creato',
     ],
     'verify' => [
-        'title' => 'Verifica dell\'account',
+        'title' => [
+            'account' => 'Verifica dell\'account',
+        ],
     ],
 
     'view_mode' => [

@@ -21,7 +21,9 @@
 return [
     'box' => [
         'sent' => 'Osoitteeseen :mail on lähetetty vahvistuskoodi. Syötä koodi.',
-        'title' => 'Tilin Vahvistaminen',
+        'title' => [
+            'account' => 'Tilin Vahvistaminen',
+        ],
         'verifying' => 'Varmistetaan...',
         'issuing' => 'Annetaan uutta koodia...',
 

@@ -21,7 +21,9 @@
 return [
     'box' => [
         'sent' => 'Kode verifikasi telah dikirim ke :mail. Masukkan kode verifikasi yang diterima.',
-        'title' => 'Verifikasi Akun',
+        'title' => [
+            'account' => 'Verifikasi Akun',
+        ],
         'verifying' => 'Memverifikasi...',
         'issuing' => 'Meminta kode baru...',
 

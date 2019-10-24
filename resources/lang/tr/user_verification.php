@@ -21,7 +21,9 @@
 return [
     'box' => [
         'sent' => 'Doğrulama kodunu içeren bir e-posta :mail hesabınıza gönderilmiştir. Kodu giriniz.',
-        'title' => 'Hesap Doğrulama',
+        'title' => [
+            'account' => 'Hesap Doğrulama',
+        ],
         'verifying' => 'Doğrulanıyor...',
         'issuing' => 'Yeni kod veriliyor...',
 

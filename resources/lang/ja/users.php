@@ -408,7 +408,9 @@ return [
         'saved' => 'ユーザー作成',
     ],
     'verify' => [
-        'title' => 'アカウントの認証',
+        'title' => [
+            'account' => 'アカウントの認証',
+        ],
     ],
 
     'view_mode' => [

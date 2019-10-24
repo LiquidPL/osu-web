@@ -408,7 +408,9 @@ return [
         'saved' => 'Criado por utilizadores',
     ],
     'verify' => [
-        'title' => 'Verificação da Conta',
+        'title' => [
+            'account' => 'Verificação da Conta',
+        ],
     ],
 
     'view_mode' => [

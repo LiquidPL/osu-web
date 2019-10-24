@@ -17,7 +17,7 @@
 --}}
 <div class="user-verification">
     <h1 class="user-verification__row user-verification__row--title">
-        {{ trans('user_verification.box.title') }}
+        {{ trans('user_verification.box.title.'.($client ? 'client' : 'account')) }}
     </h1>
 
     <p class="user-verification__row user-verification__row--info">

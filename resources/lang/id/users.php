@@ -408,7 +408,9 @@ return [
         'saved' => 'Pengguna dibuat',
     ],
     'verify' => [
-        'title' => 'Verifikasi Akun',
+        'title' => [
+            'account' => 'Verifikasi Akun',
+        ],
     ],
 
     'view_mode' => [

@@ -56,6 +56,7 @@ class UserVerification
         }
 
         $email = $this->user->user_email;
+        $client = $this->isClientVerification();
 
         if (!$this->state->issued()) {
             $this->issue();
@@ -70,7 +71,7 @@ class UserVerification
                 ),
             ], 401);
         } else {
-            return response()->view('users.verify', compact('email'));
+            return response()->view('users.verify', compact('email', 'client'));
         }
     }
 

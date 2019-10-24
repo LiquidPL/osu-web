@@ -21,7 +21,9 @@
 return [
     'box' => [
         'sent' => 'Een e-mail is gestuurd naar :mail met een bevestigingscode. Vul de code in.',
-        'title' => 'Accountverificatie',
+        'title' => [
+            'account' => 'Accountverificatie',
+        ],
         'verifying' => 'Verifiëren...',
         'issuing' => 'Nieuwe code versturen...',
 

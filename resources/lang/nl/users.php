@@ -408,7 +408,9 @@ return [
         'saved' => 'Door gebruiker gemaakt',
     ],
     'verify' => [
-        'title' => 'Accountverificatie',
+        'title' => [
+            'account' => 'Accountverificatie',
+        ],
     ],
 
     'view_mode' => [

@@ -408,7 +408,9 @@ return [
         'saved' => 'Uživatelem vytvořen',
     ],
     'verify' => [
-        'title' => 'Ověření účtu',
+        'title' => [
+            'account' => 'Ověření účtu',
+        ],
     ],
 
     'view_mode' => [
