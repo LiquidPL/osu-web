@@ -88,6 +88,7 @@ use Request;
  * @property UserReport $reportedIn
  * @property \Illuminate\Database\Eloquent\Collection $reportsMade UserReport
  * @property \Illuminate\Database\Eloquent\Collection $storeAddresses Store\Address
+ * @property string $two_factor_secret
  * @property \Illuminate\Database\Eloquent\Collection $supporterTagPurchases UserDonation
  * @property \Illuminate\Database\Eloquent\Collection $supporterTags UserDonation
  * @property \Illuminate\Database\Eloquent\Collection $userAchievements UserAchievement
@@ -2138,6 +2139,11 @@ class User extends Model implements AfterCommit, AuthenticatableContract, HasLoc
         }
 
         return true;
+    }
+
+    public function isUsingTokenAuth()
+    {
+        return $this->two_factor_secret !== null;
     }
 
     public function preferredLocale()
