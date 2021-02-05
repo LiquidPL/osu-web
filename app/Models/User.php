@@ -2141,7 +2141,7 @@ class User extends Model implements AfterCommit, AuthenticatableContract, HasLoc
         return true;
     }
 
-    public function isUsingTokenAuth()
+    public function isUsingTwoFactorAuth()
     {
         return $this->two_factor_secret !== null;
     }

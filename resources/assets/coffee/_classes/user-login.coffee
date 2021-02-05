@@ -8,7 +8,7 @@ class @UserLogin
     # Used as callback on original action (where login was required)
     @clickAfterLogin = null
 
-    $(document).on 'ajax:success', '.js-login-form', @loginSuccess
+    $(document).on 'ajax:success', '.js-login-form', @handleLogin
     $(document).on 'ajax:error', '.js-login-form', @loginError
     $(document).on 'submit', '.js-login-form', @clearError
     $(document).on 'input', '.js-login-form-input', @clearError
@@ -36,6 +36,23 @@ class @UserLogin
     Timeout.set 0, =>
       captcha.trigger() if (xhr?.responseJSON?.captcha_triggered)
       captcha.reset()
+
+
+  handleLogin: (_event, data) =>
+    if data.twoFactorChallenge?
+      @handleTwoFactor(_event, data)
+    else
+      @loginSuccess(_event, data)
+
+
+  handleTwoFactor: (_event, data) =>
+    Timeout.set 0, =>
+      $('.js-nav2--login-box').replaceWith data.login_box
+
+      # Toggling the login popup on and off, so that all the nav2
+      # related logic gets applied to the new popup.
+      $('.js-user-login--menu')[0]?.click()
+      $('.js-user-login--menu')[0]?.click()
 
 
   loginSuccess: (_event, data) =>

@@ -205,6 +205,11 @@ return [
         ],
     ],
 
+    'popup_two_factor' => [
+        'title' => 'Two-Factor Authentication',
+        'field' => 'your two-factor authentication token',
+    ],
+
     'popup_user' => [
         'links' => [
             'account-edit' => 'Settings',

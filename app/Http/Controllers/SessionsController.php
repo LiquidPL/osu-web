@@ -9,7 +9,9 @@ use App\Libraries\User\DatadogLoginAttempt;
 use App\Libraries\User\ForceReactivation;
 use App\Models\User;
 use Auth;
+use Illuminate\Http\Request;
 use NoCaptcha;
+use PragmaRX\Google2FA\Google2FA;
 
 class SessionsController extends Controller
 {
@@ -70,6 +72,7 @@ class SessionsController extends Controller
 
         $ip = $request->getClientIp();
 
+        /** @var User $user */
         $user = User::findForLogin($username);
 
         if ($user === null && strpos($username, '@') !== false && !config('osu.user.allow_email_login')) {
@@ -87,13 +90,21 @@ class SessionsController extends Controller
                 return ujs_redirect(route('password-reset'));
             }
 
+            if ($user->isUsingTwoFactorAuth()) {
+                $request->session()->put([
+                    'user_id' => $user->user_id,
+                    'remember' => $remember,
+                ]);
+
+                return [
+                    'twoFactorChallenge' => true,
+                    'login_box' => view('layout._popup_two_factor')->render(),
+                ];
+            }
+
             $this->login($user, $remember);
 
-            return [
-                'header' => view('layout._header_user')->render(),
-                'header_popup' => view('layout._popup_user')->render(),
-                'user' => Auth::user()->defaultJson(),
-            ];
+            return $this->sendLoginResponse();
         }
 
         if (captcha_triggered()) {
@@ -114,6 +125,43 @@ class SessionsController extends Controller
         }
 
         return captcha_triggered() ? ['captcha_triggered' => true] : [];
+    }
+
+    public function twoFactorChallenge(Request $request)
+    {
+        $userId = presence($request->session()->get('user_id'));
+        $remember = $request->session()->get('remember') ?? false;
+        $token = presence(trim($request->get('token')));
+
+        if ($userId === null) {
+            DatadogLoginAttempt::log('two_factor_no_user_id');
+            abort(422);
+        }
+
+        /** @var User $user */
+        $user = User::find($userId);
+
+        if ($user === null) {
+            DatadogLoginAttempt::log('two_factor_wrong_user_id');
+            abort(422);
+        }
+
+        if ((new Google2FA())->verify($token, $user->two_factor_secret)) {
+            $this->login($user, $remember);
+
+            return $this->sendLoginResponse();
+        }
+
+        return error_popup(trans('users.login.invalid_token'), 403);
+    }
+
+    private function sendLoginResponse()
+    {
+        return [
+            'header' => view('layout._header_user')->render(),
+            'header_popup' => view('layout._popup_user')->render(),
+            'user' => Auth::user()->defaultJson(),
+        ];
     }
 
     private function triggerCaptcha($message, $returnCode = 403)

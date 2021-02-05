@@ -251,6 +251,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::post('session', 'SessionsController@store')->name('login');
     Route::delete('session', 'SessionsController@destroy')->name('logout');
+    Route::post('session/two-factor-challenge', 'SessionsController@twoFactorChallenge')->name('login.two-factor-challenge');
 
     Route::post('users/check-username-availability', 'UsersController@checkUsernameAvailability')->name('users.check-username-availability');
     Route::post('users/check-username-exists', 'UsersController@checkUsernameExists')->name('users.check-username-exists');

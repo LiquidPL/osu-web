@@ -39,6 +39,7 @@
     "mariuzzo/laravel-js-localization": "*",
     "mpociot/laravel-apidoc-generator": "*",
     "paypal/rest-api-sdk-php": "*",
+    "pragmarx/google2fa": "^8.0.0",
     "sentry/sentry-laravel": "*",
     "symfony/yaml": "*",
     "tightenco/ziggy": ">=0.8.1",

@@ -8,6 +8,7 @@ namespace Tests\Controllers;
 use App\Models\Country;
 use App\Models\LoginAttempt;
 use App\Models\User;
+use PragmaRX\Google2FA\Google2FA;
 use Tests\TestCase;
 
 class SessionsControllerTest extends TestCase
@@ -173,5 +174,69 @@ class SessionsControllerTest extends TestCase
         $this->assertSame(2, $record->unique_ids);
         $this->assertSame(3, $record->failed_attempts);
         $this->assertSame(2, $record->total_attempts);
+    }
+
+    public function testLoginTwoFactorChallenge()
+    {
+        $secret = 'K3HKR3TUCVHYKC6Q';
+        $user1 = factory(User::class)->create(['two_factor_secret' => $secret]);
+
+        $response = $this->post(route('login', [
+            'username' => $user1->username,
+            'password' => 'password',
+        ]));
+
+        $response->assertJson([
+            'twoFactorChallenge' => true,
+        ]);
+
+        $user2 = factory(User::class)->create();
+
+        $response = $this->post(route('login', [
+            'username' => $user2->username,
+            'password' => 'password',
+        ]));
+
+        $response->assertJsonMissing([
+            'twoFactorChallenge' => true,
+        ]);
+    }
+
+    public function testLoginWithTwoFactorEnabled()
+    {
+        $secret = 'K3HKR3TUCVHYKC6Q';
+        $user = factory(User::class)->create(['two_factor_secret' => $secret]);
+
+        $this->post(route('login'), [
+            'username' => $user->username,
+            'password' => 'password',
+        ]);
+
+        $this->post(route('login.two-factor-challenge', [
+            'token' => (new Google2FA())->getCurrentOtp($secret),
+        ]))->assertSuccessful();
+
+        $this->assertAuthenticated();
+    }
+
+    public function testLoginWithInvalidToken()
+    {
+        $secret = 'K3HKR3TUCVHYKC6Q';
+        $user = factory(User::class)->create(['two_factor_secret' => $secret]);
+
+        $this->post(route('login'), [
+            'username' => $user->username,
+            'password' => 'password',
+        ]);
+
+        $response = $this->post(route('login.two-factor-challenge', [
+            'token' => strrev((new Google2FA())->getCurrentOtp($secret)),
+        ]));
+
+        $response
+            ->assertStatus(403)
+            ->assertJson([
+                'error' => 'Invalid token',
+            ]);
     }
 }
