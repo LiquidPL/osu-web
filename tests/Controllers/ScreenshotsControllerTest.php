@@ -7,23 +7,30 @@ namespace Tests\Controllers;
 
 use App\Models\Screenshot;
 use App\Models\User;
-use Illuminate\Filesystem\FilesystemAdapter;
+use Config;
 use Illuminate\Http\UploadedFile;
 use Storage;
 use Tests\TestCase;
 
 class ScreenshotsControllerTest extends TestCase
 {
-    private static FilesystemAdapter $storage;
-
     public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
+
         $user = User::factory()->create();
 
         // create a bunch of legacy/hashless screenshots
         // these are created in setUpBeforeClass so that they have proper
         // IDs lower or equal than config('osu.screenshots.legacy_id_cutoff')
         Screenshot::factory()->count(5)->create(['user_id' => $user->getKey()]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Config::set('osu.screenshots.legacy_id_cutoff', 5);
     }
 
     public function testStore()
