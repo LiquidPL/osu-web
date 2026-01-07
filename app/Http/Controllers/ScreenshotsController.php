@@ -37,14 +37,14 @@ class ScreenshotsController extends Controller
 
     public function show($screenshot, string $hash)
     {
-        abort_if($this->hash($screenshot) !== $hash, 404);
+        abort_if($screenshot->urlHash() !== $hash, 404);
 
         return $this->showBase($screenshot);
     }
 
     public function showLegacy($screenshot)
     {
-        abort_if($screenshot >= config('osu.screenshots.legacy_id_cutoff'), 404);
+        abort_if(!$screenshot->isLegacy(), 404);
 
         return $this->showBase($screenshot);
     }
@@ -56,17 +56,12 @@ class ScreenshotsController extends Controller
         $screenshot->last_access = Carbon::now();
         $screenshot->save();
 
-        $file = $this->storage()->get("{$screenshot->getKey()}.jpg");
+        $file = $screenshot->get();
 
         abort_if(!$file, 404);
 
         return response()->stream(function () use ($file) {
             echo $file;
         }, 200, ['Content-Type' => 'image/jpeg']);
-    }
-
-    private function hash(int $id): string
-    {
-        return substr(md5($id.config('osu.screenshots.shared_secret')), 0, 4);
     }
 }

@@ -31,9 +31,20 @@ class Screenshot extends Model
         'deleted' => 'boolean',
     ];
 
+    public function isLegacy(): bool
+    {
+        return $this->getKey() < $GLOBALS['config']['osu']['screenshots']['legacy_id_cutoff'];
+    }
+
+
     public function store($file): void
     {
         $this->storage()->putFileAs('/', $file, "{$this->getKey()}.jpg");
+    }
+
+    public function get(): ?string
+    {
+        return $this->storage()->get("{$this->getKey()}.jpg");
     }
 
     public function url(): string

@@ -12,7 +12,6 @@ use App\Models\User;
 use Config;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Storage;
 use Tests\TestCase;
 
 class ScreenshotsControllerTest extends TestCase
@@ -22,7 +21,7 @@ class ScreenshotsControllerTest extends TestCase
         $user = User::factory()->create();
         $this->actAsScopedUser($user);
 
-        Storage::fake('local-screenshot');
+        \Storage::fake('local-screenshot');
 
         $url = $this->postJson(route('api.screenshots.store'), [
             'screenshot' => UploadedFile::fake()->image('screenshot.jpg'),
@@ -33,7 +32,7 @@ class ScreenshotsControllerTest extends TestCase
 
         $this->assertGreaterThan(0, preg_match('/https?:\/\/.+\/(\d+)\/(.{4})/', $url, $matches));
 
-        Storage::disk('local-screenshot')->assertExists("{$matches[1]}.jpg");
+        \Storage::disk('local-screenshot')->assertExists("{$matches[1]}.jpg");
         $this->assertStringStartsWith($matches[2], md5($matches[1].config('osu.screenshots.shared_secret')));
     }
 
@@ -41,7 +40,7 @@ class ScreenshotsControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $screenshot = Screenshot::factory()->create(['user_id' => $user->getKey()]);
-        Storage::fake('local-screenshot')->putFileAs('/', UploadedFile::fake()->image('ss.jpg'), "{$screenshot->getKey()}.jpg");
+        \Storage::fake('local-screenshot')->putFileAs('/', UploadedFile::fake()->image('ss.jpg'), "{$screenshot->getKey()}.jpg");
 
         $this->get(route('screenshots.show', [
             'screenshot' => $screenshot->getKey(),
@@ -65,11 +64,11 @@ class ScreenshotsControllerTest extends TestCase
 
     public function testShowLegacy()
     {
-        Storage::fake('local-screenshot');
+        \Storage::fake('local-screenshot');
 
         $user = User::factory()->create();
         $screenshot = Screenshot::factory()->create(['user_id' => $user->getKey()]);
-        Storage::disk('local-screenshot')->putFileAs('/', UploadedFile::fake()->image('ss.jpg'), "{$screenshot->getKey()}.jpg");
+        \Storage::disk('local-screenshot')->putFileAs('/', UploadedFile::fake()->image('ss.jpg'), "{$screenshot->getKey()}.jpg");
 
         Config::set('osu.screenshots.legacy_id_cutoff', $screenshot->getKey() + 1);
 
