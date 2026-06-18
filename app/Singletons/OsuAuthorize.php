@@ -1157,6 +1157,10 @@ class OsuAuthorize
         $this->ensureCleanRecord($user);
         $this->ensureHasPlayed($user);
 
+        if ($commentable instanceof Beatmapset && $commentable->user->hasBlocked($user)) {
+            return 'comment.store.blocked';
+        }
+
         if ($commentable->commentLocked()) {
             return 'comment.store.disabled';
         }
