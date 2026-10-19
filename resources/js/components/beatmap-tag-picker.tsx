@@ -19,6 +19,7 @@ interface Props {
 @observer
 export default class BeatmapTagPicker extends React.Component<Props> {
   private readonly inputRef = React.createRef<HTMLInputElement>();
+  private shouldFocusInputOnNextRender = true;
 
   @computed
   private get groups() {
