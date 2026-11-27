@@ -1944,6 +1944,17 @@ class OsuAuthorize
         return 'ok';
     }
 
+    public function checkMultiplayerShowPrivilegedEvents(?User $user): string
+    {
+        $this->ensureLoggedIn($user);
+
+        if ($user->isModerator()) {
+            return 'ok';
+        }
+
+        return 'unauthorized';
+    }
+
     /**
      * @param User|null $user
      * @param \App\Models\Solo\Score $score

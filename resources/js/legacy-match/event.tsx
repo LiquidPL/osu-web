@@ -20,6 +20,7 @@ const icons = {
   game_aborted: ['fas fa-stop-circle'],
   game_completed: ['fas fa-check-circle'],
   host_changed: ['fas fa-exchange-alt'],
+  name_changed: ['fas fa-pencil-alt'],
   player_joined: ['fas fa-arrow-right', 'far fa-circle'],
   player_kicked: ['fas fa-arrow-left', 'fas fa-ban'],
   player_left: ['fas fa-arrow-left', 'far fa-circle'],
@@ -49,6 +50,7 @@ export default observer(function Event(props: Props) {
             ? trans(`matches.match.events.${eventType}_no_user`)
             : <StringWithComponent
               mappings={{
+                name: eventType === 'name_changed' ? <span className='mp-history-event__new-room-name'>{props.event.event_detail?.new_name}</span> : null,
                 user: (<UserLink
                   className='mp-history-event__username'
                   user={user}

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\DailyChallengeDateHelper;
 use App\Models\Beatmap;
 use App\Models\Model;
+use App\Models\Multiplayer\RealtimeRoomEvent;
 use App\Models\Multiplayer\Room;
 use App\Models\SeasonRoom;
 use App\Models\User;
@@ -46,6 +47,8 @@ class RoomsController extends Controller
             throw new InvariantException('retrieving events is only supported for realtime rooms');
         }
 
+        $canSeePrivileged = priv_check('MultiplayerShowPrivilegedEvents')->can();
+
         $params = get_params(request()->all(), null, [
             'limit:int',
             'after:int',
@@ -70,6 +73,10 @@ class RoomsController extends Controller
 
             $events->orderBy('id', 'DESC');
             $reverseOrder = true;
+        }
+
+        if (!$canSeePrivileged) {
+            $events->nonPrivileged();
         }
 
         $userIds = new Set();
@@ -122,10 +129,15 @@ class RoomsController extends Controller
             new RealtimeRoomEventTransformer(),
         );
 
-        $eventEndIds = $room
+        $eventEndIdsQuery = $room
             ->events()
-            ->selectRaw('MIN(id) first_event_id, MAX(id) last_event_id')
-            ->first();
+            ->selectRaw('MIN(id) first_event_id, MAX(id) last_event_id');
+
+        if (!$canSeePrivileged) {
+            $eventEndIdsQuery->nonPrivileged();
+        }
+
+        $eventEndIds = $eventEndIdsQuery->first();
 
         $json = [
             'beatmaps' => json_collection($beatmaps, new BeatmapCompactTransformer()),

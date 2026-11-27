@@ -19,6 +19,7 @@ return [
             'game_aborted_no_user' => 'the game was canceled',
             'game_completed' => 'the game has ended',
             'game_completed_no_user' => 'the game has ended',
+            'name_changed' => ':user changed the room name to :name',
             'host_changed' => ':user became the host',
             'host_changed_no_user' => 'the host was changed',
             'player_joined' => ':user joined the match',

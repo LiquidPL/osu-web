@@ -6,6 +6,7 @@ import LegacyMatchEventJson, { LegacyMatchEventType } from './legacy-match-event
 export function eventFromLegacy(event: LegacyMatchEventJson): RealtimeRoomEventJson {
   return {
     created_at: event.timestamp,
+    event_detail: null,
     event_type: eventTypeFromLegacy(event),
     id: event.id,
     playlist_item_id: event.game?.id ?? null,
@@ -14,7 +15,7 @@ export function eventFromLegacy(event: LegacyMatchEventJson): RealtimeRoomEventJ
 }
 
 function eventTypeFromLegacy(event: LegacyMatchEventJson) {
-  const map: Record<LegacyMatchEventType, RealtimeRoomEventType> = {
+  const map: Record<LegacyMatchEventType, Exclude<RealtimeRoomEventType, 'name_changed'>> = {
     'host-changed': 'host_changed',
     'match-created': 'room_created',
     'match-disbanded': 'room_disbanded',
@@ -34,6 +35,7 @@ export type RealtimeRoomEventType =
   | 'game_aborted'
   | 'game_completed'
   | 'host_changed'
+  | 'name_changed'
   | 'player_joined'
   | 'player_kicked'
   | 'player_left'
@@ -41,10 +43,24 @@ export type RealtimeRoomEventType =
   | 'room_disbanded'
   | 'unknown';
 
-export default interface RealtimeRoomEventJson {
+export interface RoomNameChangedEventDetail {
+  new_name: string;
+  old_name: string;
+}
+
+type RealtimeRoomEventDetail = {
+  event_detail: null;
+  event_type: Exclude<RealtimeRoomEventType, 'name_changed'>;
+} | {
+  event_detail: RoomNameChangedEventDetail;
+  event_type: 'name_changed';
+};
+
+type RealtimeRoomEventJson = {
   created_at: string;
-  event_type: RealtimeRoomEventType;
   id: number;
   playlist_item_id: null | number;
   user_id: null | number;
-}
+} & RealtimeRoomEventDetail;
+
+export default RealtimeRoomEventJson;

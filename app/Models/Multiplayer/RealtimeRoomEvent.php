@@ -9,6 +9,7 @@ namespace App\Models\Multiplayer;
 
 use App\Models\Model;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property \Carbon\Carbon|null $created_at
@@ -30,6 +31,7 @@ class RealtimeRoomEvent extends Model
         'game_aborted',
         'game_completed',
         'host_changed',
+        'name_changed',
         'player_joined',
         'player_kicked',
         'player_left',
@@ -37,11 +39,20 @@ class RealtimeRoomEvent extends Model
         'room_disbanded',
     ];
 
+    const PRIVILEGED_EVENT_TYPES = [
+        'name_changed',
+    ];
+
     protected $table = 'multiplayer_realtime_room_events';
 
     protected $casts = [
         'event_detail' => 'array',
     ];
+
+    public function scopeNonPrivileged(Builder $query): Builder
+    {
+        return $query->whereNotIn('event_type', self::PRIVILEGED_EVENT_TYPES);
+    }
 
     public function room()
     {
